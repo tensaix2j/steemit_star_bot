@@ -1,0 +1,26 @@
+{
+	"voters":[
+		{
+			"user":"user01",
+			"wif":"wif"
+		},
+		{
+			"user":"user02",
+			"wif":"wif02"
+		},
+	],
+	"popular_fellows": [
+		"sweetsssj",
+		"stan",
+		"dollarvigilante",
+		"ats-david",
+		"kingscrown",
+		"jerrybanfield",
+	]
+
+}
+
+
+
+
+
