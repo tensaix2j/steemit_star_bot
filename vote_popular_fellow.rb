@@ -21,6 +21,27 @@ def vote( author, voter, voter_wif , permlink )
 
 end
 
+
+
+#-----------------------
+def populate_voters
+	
+	@voters = []
+	@popular_fellows = []
+
+	begin
+		config = JSON.parse( open("config.json").read() )
+		@voters 			= config["voters"]
+		@popular_fellows 	= config["popular_fellows"]
+
+	rescue Exception => ex
+		puts ex.to_s
+	end
+
+end
+
+
+
 #---------------------
 def main
 		
@@ -40,22 +61,6 @@ def main
 	end
 end
 
-#-----------------------
-def populate_voters
-	
-	@voters = []
-	@popular_fellows = []
-
-	begin
-		config = JSON.parse( open("config.json").read() )
-		@voters 			= config["voters"]
-		@popular_fellows 	= config["popular_fellows"]
-
-	rescue Exception => ex
-		puts ex.to_s
-	end
-
-end
 
 main
 
