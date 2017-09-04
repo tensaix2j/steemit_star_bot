@@ -51,21 +51,14 @@ end
 #-------------------------
 def process_votequeue( api )
 
-	printf "#{@vote_queue.count} " if @vote_queue.count > 0
-	
 	if @vote_queue.length > 0
 
 		votable = @vote_queue[0]
-		comment = api.get_content(votable[:author], votable[:permlink]).result
-
-		post_epoch = Time.parse( comment.created ).to_i 
-		now_epoch  = Time.now.to_i 
-
-		# 30 minutes rule
-		if now_epoch - post_epoch > 1500 && now_epoch - post_epoch < 2400 
+		
+		if Time.now.to_i >= votable[:votetime]
 			@voters.each { |v|
 				vote( votable[:author], v["user"], v["wif"], votable[:permlink] )
-				sleep 1
+				sleep 3
 			}
 			@vote_queue.shift
 		end	
@@ -95,11 +88,15 @@ def main
 		  		
 		  		if op["parent_author"] == "" && @popular_fellows.index(op["author"]) != nil 
 					
-					aaa = 1
 					votable = {}
 					votable[:author] 	= op["author"] 
 					votable[:permlink] 	= op["permlink"]
+
+					#after 14 minutes 30 seconds must vote already..
+					votable[:votetime]	= Time.now.to_i + 14 * 60 + 30
 					@vote_queue << votable
+
+					puts "#{ Time.now().strftime("%Y%m%d.%H%M%S") } (#{ Time.now.to_i }) : Queued : #{ votable.inspect }"
 				end
 
 
