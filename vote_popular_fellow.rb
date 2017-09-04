@@ -7,7 +7,7 @@ require 'time'
 #-----------------------------------
 def vote( author, voter, voter_wif , permlink )  
 
-	puts "#{voter} voting for #{author}"
+	puts "#{voter} to vote for #{author}"
 
 	begin
 		tx = Radiator::Transaction.new(wif: voter_wif)
@@ -23,8 +23,7 @@ def vote( author, voter, voter_wif , permlink )
 		tx.process(true)
 
 	rescue Exception => ex
-		puts "\n Failed to vote for #{author}"
-		puts ex.to_s
+		puts "\n Failed to vote for #{author}. Error #{ex.to_s}"
 	end	
 end
 
@@ -52,7 +51,8 @@ end
 #-------------------------
 def process_votequeue( api )
 
-	printf "#{@vote_queue.count} "
+	printf "#{@vote_queue.count} " if @vote_queue.count > 0
+	
 	if @vote_queue.length > 0
 
 		votable = @vote_queue[0]
@@ -62,12 +62,12 @@ def process_votequeue( api )
 		now_epoch  = Time.now.to_i 
 
 		# 30 minutes rule
-		if now_epoch - post_epoch > 1500 && now_epoch - post_epoch < 2400
+		if now_epoch - post_epoch > 1500 && now_epoch - post_epoch < 2400 
 			@voters.each { |v|
 				vote( votable[:author], v["user"], v["wif"], votable[:permlink] )
 				sleep 1
 			}
-			@vote_queue.shift!
+			@vote_queue.shift
 		end	
 	end				
 end
@@ -92,11 +92,13 @@ def main
 		begin 
 			
 			stream.operations(:comment) do |op|
-		  			
-				if op.parent_author == "" && @popular_fellows.index(op.author) != nil
+		  		
+		  		if op["parent_author"] == "" && @popular_fellows.index(op["author"]) != nil 
+					
+					aaa = 1
 					votable = {}
-					votable[:author] 	= op.author 
-					votable[:permlink] 	= op.permlink
+					votable[:author] 	= op["author"] 
+					votable[:permlink] 	= op["permlink"]
 					@vote_queue << votable
 				end
 
@@ -106,7 +108,6 @@ def main
 			end
 		rescue Exception => ex
 			puts "Error in stream.operation. Error: #{ ex.to_s }. Retrying.."
-			puts ex.backtrace
 			sleep 5
 		end
 	end
