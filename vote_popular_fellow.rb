@@ -50,7 +50,7 @@ end
 
 
 #-------------------------
-def process_votequeue
+def process_votequeue( api )
 
 	printf "#{@vote_queue.count} "
 	if @vote_queue.length > 0
@@ -101,7 +101,7 @@ def main
 				end
 
 
-				process_votequeue
+				process_votequeue(api)
 
 			end
 		rescue Exception => ex
