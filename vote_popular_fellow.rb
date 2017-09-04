@@ -97,7 +97,7 @@ def main
 					votable = {}
 					votable[:author] 	= op.author 
 					votable[:permlink] 	= op.permlink
-					vote_queue << votable
+					@vote_queue << votable
 				end
 
 
