@@ -93,7 +93,7 @@ def main
 					votable[:permlink] 	= op["permlink"]
 
 					#after 14 minutes 30 seconds must vote already..
-					votable[:votetime]	= Time.now.to_i + 14 * 60 + 30
+					votable[:votetime]	= Time.now.to_i + 25 * 60 
 					@vote_queue << votable
 
 					puts "#{ Time.now().strftime("%Y%m%d.%H%M%S") } (#{ Time.now.to_i }) : Queued : #{ votable.inspect }"
